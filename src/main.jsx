@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Activity,
@@ -55,7 +55,12 @@ const API = {
     const headers = { ...(options.body instanceof FormData ? {} : { "Content-Type": "application/json" }), ...(options.headers || {}) };
     const token = API.token();
     if (token) headers.Authorization = `Bearer ${token}`;
-    const response = await fetch(`${API_BASE}${path}`, { ...options, headers });
+    let response;
+try {
+  response = await fetch(`${API_BASE}${path}`, { ...options, headers });
+} catch (error) {
+  throw new Error(`Unable to connect to Magizh server. ${error.message}`);
+}
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.error || `Request failed (${response.status})`);
     return data;
@@ -118,7 +123,7 @@ function AuthScreen({ onAuthenticated }) {
           <Input label="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Minimum 8 characters" autoComplete={mode === "login" ? "current-password" : "new-password"} />
           {error && <div className="auth-error">{error}</div>}
           <Button disabled={busy}>
-            {busy ? "Please wait…" : mode === "login" ? "Log in" : "Create account"}
+            {busy ? "Please waitâ€¦" : mode === "login" ? "Log in" : "Create account"}
             {!busy && <ArrowRight size={17} />}
           </Button>
         </form>
@@ -157,11 +162,11 @@ const C = {
 
 const LANGS = [
   ["en", "English"],
-  ["ta", "தமிழ்"],
-  ["hi", "हिन्दी"],
-  ["te", "తెలుగు"],
-  ["kn", "ಕನ್ನಡ"],
-  ["ml", "മലയാളം"]
+  ["ta", "à®¤à®®à®¿à®´à¯"],
+  ["hi", "à¤¹à¤¿à¤¨à¥à¤¦à¥€"],
+  ["te", "à°¤à±†à°²à±à°—à±"],
+  ["kn", "à²•à²¨à³à²¨à²¡"],
+  ["ml", "à´®à´²à´¯à´¾à´³à´‚"]
 ];
 
 const T = {
@@ -178,63 +183,63 @@ const T = {
   },
 
   ta: {
-    home: "முகப்பு",
-    learn: "கற்க",
-    ai: "மகிழ் AI",
-    community: "சமூகம்",
-    profile: "சுயவிவரம்",
-    reminders: "நினைவூட்டல்கள்",
-    add: "சேர்க்க",
-    contacts: "அவசர தொடர்புகள்",
-    settings: "அமைப்புகள்"
+    home: "à®®à¯à®•à®ªà¯à®ªà¯",
+    learn: "à®•à®±à¯à®•",
+    ai: "à®®à®•à®¿à®´à¯ AI",
+    community: "à®šà®®à¯‚à®•à®®à¯",
+    profile: "à®šà¯à®¯à®µà®¿à®µà®°à®®à¯",
+    reminders: "à®¨à®¿à®©à¯ˆà®µà¯‚à®Ÿà¯à®Ÿà®²à¯à®•à®³à¯",
+    add: "à®šà¯‡à®°à¯à®•à¯à®•",
+    contacts: "à®…à®µà®šà®° à®¤à¯Šà®Ÿà®°à¯à®ªà¯à®•à®³à¯",
+    settings: "à®…à®®à¯ˆà®ªà¯à®ªà¯à®•à®³à¯"
   },
 
   hi: {
-    home: "होम",
-    learn: "सीखें",
-    ai: "मगिझ़ AI",
-    community: "समुदाय",
-    profile: "प्रोफ़ाइल",
-    reminders: "रिमाइंडर",
-    add: "जोड़ें",
-    contacts: "आपातकालीन संपर्क",
-    settings: "सेटिंग्स"
+    home: "à¤¹à¥‹à¤®",
+    learn: "à¤¸à¥€à¤–à¥‡à¤‚",
+    ai: "à¤®à¤—à¤¿à¤à¤¼ AI",
+    community: "à¤¸à¤®à¥à¤¦à¤¾à¤¯",
+    profile: "à¤ªà¥à¤°à¥‹à¤«à¤¼à¤¾à¤‡à¤²",
+    reminders: "à¤°à¤¿à¤®à¤¾à¤‡à¤‚à¤¡à¤°",
+    add: "à¤œà¥‹à¤¡à¤¼à¥‡à¤‚",
+    contacts: "à¤†à¤ªà¤¾à¤¤à¤•à¤¾à¤²à¥€à¤¨ à¤¸à¤‚à¤ªà¤°à¥à¤•",
+    settings: "à¤¸à¥‡à¤Ÿà¤¿à¤‚à¤—à¥à¤¸"
   },
 
   te: {
-    home: "హోమ్",
-    learn: "నేర్చుకోండి",
-    ai: "మగిఝ్ AI",
-    community: "సంఘం",
-    profile: "ప్రొఫైల్",
-    reminders: "రిమైండర్‌లు",
-    add: "జోడించండి",
-    contacts: "అత్యవసర పరిచయాలు",
-    settings: "సెట్టింగ్‌లు"
+    home: "à°¹à±‹à°®à±",
+    learn: "à°¨à±‡à°°à±à°šà±à°•à±‹à°‚à°¡à°¿",
+    ai: "à°®à°—à°¿à°à± AI",
+    community: "à°¸à°‚à°˜à°‚",
+    profile: "à°ªà±à°°à±Šà°«à±ˆà°²à±",
+    reminders: "à°°à°¿à°®à±ˆà°‚à°¡à°°à±â€Œà°²à±",
+    add: "à°œà±‹à°¡à°¿à°‚à°šà°‚à°¡à°¿",
+    contacts: "à°…à°¤à±à°¯à°µà°¸à°° à°ªà°°à°¿à°šà°¯à°¾à°²à±",
+    settings: "à°¸à±†à°Ÿà±à°Ÿà°¿à°‚à°—à±â€Œà°²à±"
   },
 
   kn: {
-    home: "ಮುಖಪುಟ",
-    learn: "ಕಲಿಯಿರಿ",
-    ai: "ಮಗಿಝ್ AI",
-    community: "ಸಮುದಾಯ",
-    profile: "ಪ್ರೊಫೈಲ್",
-    reminders: "ಜ್ಞಾಪನೆಗಳು",
-    add: "ಸೇರಿಸಿ",
-    contacts: "ತುರ್ತು ಸಂಪರ್ಕಗಳು",
-    settings: "ಸೆಟ್ಟಿಂಗ್‌ಗಳು"
+    home: "à²®à³à²–à²ªà³à²Ÿ",
+    learn: "à²•à²²à²¿à²¯à²¿à²°à²¿",
+    ai: "à²®à²—à²¿à²à³ AI",
+    community: "à²¸à²®à³à²¦à²¾à²¯",
+    profile: "à²ªà³à²°à³Šà²«à³ˆà²²à³",
+    reminders: "à²œà³à²žà²¾à²ªà²¨à³†à²—à²³à³",
+    add: "à²¸à³‡à²°à²¿à²¸à²¿",
+    contacts: "à²¤à³à²°à³à²¤à³ à²¸à²‚à²ªà²°à³à²•à²—à²³à³",
+    settings: "à²¸à³†à²Ÿà³à²Ÿà²¿à²‚à²—à³â€Œà²—à²³à³"
   },
 
   ml: {
-    home: "ഹോം",
-    learn: "പഠിക്കുക",
-    ai: "മഗിഴ് AI",
-    community: "കമ്മ്യൂണിറ്റി",
-    profile: "പ്രൊഫൈൽ",
-    reminders: "റിമൈൻഡറുകൾ",
-    add: "ചേർക്കുക",
-    contacts: "എമർജൻസി കോൺടാക്റ്റുകൾ",
-    settings: "സെറ്റിംഗ്സ്"
+    home: "à´¹àµ‹à´‚",
+    learn: "à´ªà´ à´¿à´•àµà´•àµà´•",
+    ai: "à´®à´—à´¿à´´àµ AI",
+    community: "à´•à´®àµà´®àµà´¯àµ‚à´£à´¿à´±àµà´±à´¿",
+    profile: "à´ªàµà´°àµŠà´«àµˆàµ½",
+    reminders: "à´±à´¿à´®àµˆàµ»à´¡à´±àµà´•àµ¾",
+    add: "à´šàµ‡àµ¼à´•àµà´•àµà´•",
+    contacts: "à´Žà´®àµ¼à´œàµ»à´¸à´¿ à´•àµ‹àµºà´Ÿà´¾à´•àµà´±àµà´±àµà´•àµ¾",
+    settings: "à´¸àµ†à´±àµà´±à´¿à´‚à´—àµà´¸àµ"
   }
 };
 
@@ -499,7 +504,7 @@ function Splash({ done }) {
       <h1>Magizh</h1>
 
       <p>
-        மகிழ் · joy, for every motherhood
+        à®®à®•à®¿à®´à¯ Â· joy, for every motherhood
       </p>
     </div>
   );
@@ -1035,7 +1040,7 @@ function HomePage({
           </span>
 
           <h1>
-            {p.name} 🌸
+            {p.name} ðŸŒ¸
           </h1>
         </div>
 
@@ -1059,13 +1064,13 @@ function HomePage({
               ? "POSTNATAL"
               : `TRIMESTER ${preg.trimester}`
             }
-            {" · HEALTH "}
+            {" Â· HEALTH "}
             {score}
           </span>
 
           <h2>
             {post
-              ? `${p.babyName || "Your baby"} · ${preg.ageWeeks}w old`
+              ? `${p.babyName || "Your baby"} Â· ${preg.ageWeeks}w old`
               : `Week ${preg.week}`
             }
           </h2>
@@ -1183,9 +1188,9 @@ function HomePage({
 
                     <span className="muted">
                       {reminder.date}
-                      {" · "}
+                      {" Â· "}
                       {reminder.time}
-                      {" · "}
+                      {" Â· "}
                       {reminder.repeat}
                     </span>
 
@@ -1352,10 +1357,10 @@ function Learn() {
   const [query, setQuery] = useState("");
 
   const trimesterData = [
-    { id: "first_trimester", label: "First Trimester", weeks: "0–13" },
-    { id: "second_trimester", label: "Second Trimester", weeks: "14–27" },
-    { id: "third_trimester", label: "Third Trimester", weeks: "28–40" },
-    { id: "fourth_trimester", label: "Fourth Trimester", weeks: "41–52 · postpartum" }
+    { id: "first_trimester", label: "First Trimester", weeks: "0â€“13" },
+    { id: "second_trimester", label: "Second Trimester", weeks: "14â€“27" },
+    { id: "third_trimester", label: "Third Trimester", weeks: "28â€“40" },
+    { id: "fourth_trimester", label: "Fourth Trimester", weeks: "41â€“52 Â· postpartum" }
   ];
 
   const topics = [
@@ -1758,7 +1763,7 @@ function AIPage({ profile }) {
         <Sparkles />
         <div>
           <h1>Magizh AI</h1>
-          <p className="muted">Powered by Ollama · voice by ElevenLabs</p>
+          <p className="muted">Powered by Ollama Â· voice by ElevenLabs</p>
         </div>
       </div>
 
@@ -1773,7 +1778,7 @@ function AIPage({ profile }) {
             )}
           </div>
         ))}
-        {loading && <div className="bubble ai">Thinking with Ollama…</div>}
+        {loading && <div className="bubble ai">Thinking with Ollamaâ€¦</div>}
       </div>
 
       {voiceError && <div className="voice-error">{voiceError}</div>}
@@ -1792,7 +1797,7 @@ function AIPage({ profile }) {
           value={question}
           onChange={e => setQuestion(e.target.value)}
           onKeyDown={e => { if (e.key === "Enter") sendText(); }}
-          placeholder={listening ? "Listening…" : "Ask Magizh AI…"}
+          placeholder={listening ? "Listeningâ€¦" : "Ask Magizh AIâ€¦"}
           disabled={loading || listening}
         />
         <button onClick={() => sendText()} disabled={!question.trim() || loading} aria-label="Send">
@@ -1800,7 +1805,7 @@ function AIPage({ profile }) {
         </button>
       </div>
       <p className="voice-hint">
-        {listening ? "Recording… tap the microphone again to send." : "Tap the microphone to speak. Magizh uses ElevenLabs Scribe for transcription and ElevenLabs for spoken answers."}
+        {listening ? "Recordingâ€¦ tap the microphone again to send." : "Tap the microphone to speak. Magizh uses ElevenLabs Scribe for transcription and ElevenLabs for spoken answers."}
       </p>
     </div>
   );
@@ -1937,7 +1942,7 @@ function Community({ profileName = "You" }) {
         <textarea
           value={newPost}
           onChange={e => setNewPost(e.target.value)}
-          placeholder="Share a question or experience…"
+          placeholder="Share a question or experienceâ€¦"
           maxLength={500}
         />
         <div className="community-compose-footer">
@@ -2731,7 +2736,7 @@ function Contacts({
 
               <span className="muted">
                 {contact.relation}
-                {" · "}
+                {" Â· "}
                 {contact.phone}
               </span>
 
@@ -2956,7 +2961,7 @@ function App() {
       <div className="auth-shell">
         <div className="auth-loading">
           <img src="/magizh-logo.png" alt="Magizh" />
-          <p>Restoring your secure session…</p>
+          <p>Restoring your secure sessionâ€¦</p>
         </div>
       </div>
     );
@@ -3041,3 +3046,4 @@ createRoot(
 ).render(
   <App />
 );
+
