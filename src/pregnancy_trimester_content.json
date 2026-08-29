@@ -1,0 +1,214 @@
+{
+  "section": "Pregnancy",
+  "trimesters": [
+    {
+      "id": "first_trimester",
+      "label": "First Trimester",
+      "weeks": "0–13",
+      "what_is_it": "Counted from the first day of your last menstrual period, this covers the first 3 months of pregnancy. From the moment the embryo implants, your baby doesn't waste any time — by the end of month 3, almost all their organs have started to grow, from head to toe. This is an important time to eat well, sleep, and start taking prenatal vitamins.",
+      "what_to_expect": {
+        "symptoms": [
+          "Nausea and vomiting (\"morning sickness\") — despite the name, can strike any time of day, not just mornings. It's usually strongest early on but can persist later too",
+          "Light spotting in the first month, often implantation bleeding shortly after conception",
+          "Fatigue — very common, caused by rapidly rising hormone levels as your body supports a new life. Extreme fatigue can sometimes signal anemia (low iron), which your doctor checks via bloodwork",
+          "Swollen, tender breasts; nipples may darken; some yellow fluid (colostrum) may appear — all normal",
+          "Heartburn, indigestion and constipation — caused by pregnancy hormones (progesterone, relaxin) slowing your digestive tract",
+          "Mood changes — joy, anxiety, excitement and overwhelm can all hit within minutes; talk to a doctor if it feels severe (persistent anxiety or depression)",
+          "It's also completely normal to have few or no symptoms — this does not mean anything is wrong"
+        ],
+        "self_care_tips": [
+          "Nausea: your baby's nutritional needs are minimal right now, so occasional inability to keep food down isn't harmful — but call your doctor if you're vomiting multiple times a day, dehydrated, or losing significant weight (possible hyperemesis gravidarum)",
+          "Fatigue: eat iron-rich foods (leafy greens, beans, dried fruit, lean meats) and let your body rest when it needs to",
+          "Constipation: drink water, eat fiber-rich foods, take probiotics, stay active, avoid refined foods like white bread",
+          "Heartburn: eat smaller, more frequent meals, avoid trigger foods, don't lie down right after eating, avoid food/drink 2 hours before bed"
+        ],
+        "prenatal_care": [
+          "Schedule your first prenatal visit before 10 weeks pregnant",
+          "First visit includes: confirming pregnancy, dating ultrasound, a physical and pelvic exam, routine bloodwork",
+          "Discuss genetic screening options — most common reason to test is a high-risk pregnancy (maternal age over 35, family history, previous child with a genetic disorder, abnormal bloodwork, or an ultrasound irregularity)",
+          "Take a prenatal vitamin with at least 400 mcg folic acid to help protect against neural tube defects like spina bifida; consider one with omega-3s (DHA) for brain development"
+        ],
+        "nutrition_snapshot": [
+          "Enjoy: healthy proteins, vegetables, fruit, nuts, pasteurized dairy, whole grains, beans/legumes/lentils, deep-sea fish in moderation",
+          "Avoid: raw/undercooked meats, cold cuts, unpasteurized dairy or juice, alcohol, excess artificial ingredients, more than 1–2 cups of coffee a day (~200mg caffeine max)"
+        ]
+      },
+      "baby_growth": [
+        "~5 weeks: placenta and umbilical cord begin forming",
+        "~6 weeks: a beating heart may be visible on ultrasound",
+        "Eyes and brain begin forming",
+        "Hands and feet begin forming",
+        "Beginnings of muscles, bones and even teeth appear",
+        "By end of week 13: almost all organs have started developing"
+      ],
+      "checkpoints": [
+        "Schedule first prenatal visit (before week 10)",
+        "Start prenatal vitamins with folic acid",
+        "Discuss genetic screening options with your provider",
+        "Cut out alcohol and raw/unpasteurized foods"
+      ]
+    },
+    {
+      "id": "second_trimester",
+      "label": "Second Trimester",
+      "weeks": "14–27",
+      "what_is_it": "Often called the more comfortable stretch of pregnancy — many first-trimester symptoms ease up, energy returns, and your baby bump becomes visible. Your doctor's focus continues to be keeping you and your baby healthy through more frequent screenings and check-ins.",
+      "what_to_expect": {
+        "symptoms_and_changes": [
+          "Most early symptoms (nausea, extreme fatigue) typically improve",
+          "Visible baby bump develops as baby's weight increases",
+          "First fetal movements (\"quickening\") often felt for the first time",
+          "Breast and body changes continue; skin changes like a heightened sense of smell are common"
+        ],
+        "prenatal_care": [
+          "Hear your baby's heartbeat for the first time",
+          "Anatomy scan ultrasound around 18–22 weeks — checks the heart, brain, arms/legs, fingers/toes, lungs, stomach, intestines, kidneys and bladder; can reveal baby's sex",
+          "Optional testing for spinal cord and brain conditions (e.g., AFP screening, quad marker screening)",
+          "Gestational diabetes and other routine screening labs",
+          "Every visit includes: blood pressure check, weight check, urine sample, and — after 12 weeks — listening to baby's heartbeat"
+        ],
+        "planning_ahead": [
+          "Good time to start drafting a birth plan: support people, atmosphere (sound/lighting/bedding), labor positions, and pain management preferences (unmedicated, epidural, laughing gas/nitrous oxide)",
+          "Consider signing up for maternity classes: newborn care & CPR, breastfeeding, childbirth prep, infant massage, parent bootcamp",
+          "Consider a hospital tour to see the delivery room, parking, and amenities ahead of time"
+        ]
+      },
+      "baby_growth": [
+        "Weight increases from about 1 oz to roughly 2.5 lbs by the end of this trimester",
+        "Eyelids, eyebrows and lashes form; eyes can open and move",
+        "Fingerprints, footprints and nails form",
+        "Hair starts growing",
+        "Baby can hear your voice and may respond to it",
+        "Moving more and more as muscles develop"
+      ],
+      "checkpoints": [
+        "Schedule anatomy scan (18–22 weeks)",
+        "Start drafting a birth plan",
+        "Sign up for maternity/childbirth classes",
+        "Take the gestational diabetes glucose screening test"
+      ]
+    },
+    {
+      "id": "third_trimester",
+      "label": "Third Trimester",
+      "weeks": "28–40",
+      "what_is_it": "The final stretch of pregnancy, where your focus shifts to your baby's rapid growth and getting ready for labor and delivery. Symptoms can look different than earlier trimesters, and every pregnancy experiences this stage differently.",
+      "what_to_expect": {
+        "symptoms_and_body_changes": [
+          "Braxton Hicks (practice) contractions begin as your uterus prepares for labor",
+          "Cervix may begin thinning (effacement) and opening (dilation)",
+          "Swollen feet and hands, back and pelvic pain, changes to vaginal discharge are common",
+          "Baby moves and changes position frequently, and can be felt kicking, hiccuping, and shifting"
+        ],
+        "prenatal_care_schedule": [
+          "Weeks 28–36: prenatal visits every 2 weeks — discuss what to expect, Rhogam shot if needed, delivery planning, feeding plans, pediatrician selection",
+          "Weeks 37–40: prenatal visits every week — group B strep test (from week 36), cervical checks for dilation/effacement, confirming baby's position"
+        ],
+        "getting_ready": [
+          "Aim to have baby essentials (crib, car seat, diapers, clothes) ready by around week 32 so you can relax in the final weeks",
+          "Buy car seats and cribs/mattresses new when possible for safety; used clothes and toys are generally fine with a wash/wipe-down",
+          "Pack your hospital bag: toiletries, comfortable clothes, going-home outfits for you and baby, items that help you relax",
+          "Finalize your pediatrician — you can't leave the hospital until baby's first appointment is scheduled",
+          "Know the signs of labor: contractions every 5 minutes lasting about 1 minute for over an hour, vaginal bleeding, water breaking, or a decrease in baby's movement — call your doctor"
+        ],
+        "labor_stages_preview": [
+          "Stage 1 (Latent & active labor) — longest stage; cervix dilates fully to 10cm",
+          "Stage 2 (Childbirth) — pushing and delivery of the baby",
+          "Stage 3 (Delivery of the placenta)",
+          "Stage 4 (Recovery) — immediate post-birth monitoring and bonding"
+        ]
+      },
+      "baby_growth": [
+        "Gains roughly half a pound per week — from about 2 lbs to up to 10 lbs by the end",
+        "Can open and close hands, suck their thumb",
+        "Can distinguish light from dark",
+        "Practicing how to breathe",
+        "Moving and changing positions frequently as space gets tighter"
+      ],
+      "checkpoints": [
+        "Have baby essentials ready by week 32",
+        "Pack hospital bag",
+        "Confirm pediatrician before delivery",
+        "Finalize and share your birth plan with your provider",
+        "Know your labor warning signs and when to call/go to the hospital"
+      ]
+    },
+    {
+      "id": "fourth_trimester",
+      "label": "Fourth Trimester",
+      "weeks": "41–52 (first 3 months postpartum)",
+      "what_is_it": "Not a pregnancy stage — the adjustment period after birth for both baby and parent, as everyone adapts to life outside the womb. A newborn's early life revolves around 5 things: eating, peeing, pooping, sleeping and crying. If that's all your baby is doing, they're right on track.",
+      "what_to_expect": {
+        "your_recovery": [
+          "Vaginal birth recovery: usually 2–6 weeks (longer with tearing/stitches)",
+          "C-section recovery: usually 6–8 weeks, with more frequent follow-ups to check the incision",
+          "Vaginal bleeding (lochia) is normal for several weeks — but heavy bleeding (soaking a pad an hour) or clots larger than a quarter need medical attention",
+          "Swelling (postpartum edema) in feet, ankles, legs and face is common and usually resolves in a few weeks",
+          "\"Baby blues\" — short-term sadness/anxiety — affect almost everyone briefly; if feelings persist past 2 weeks or worsen, this may be postpartum depression (up to 10% of postpartum patients) and needs medical attention",
+          "Emergency symptoms to seek care for immediately: fever, heavy bleeding, chest pain, trouble breathing, severe headache, dizziness/fainting, vision changes, extreme swelling, severe pain"
+        ],
+        "feeding_and_care": [
+          "Newborns feed about 8–12 times a day, roughly every 2–3 hours, including overnight",
+          "Breastfeeding, formula feeding, pumping, or combination feeding are all valid — \"a fed baby is best\"",
+          "By day 3, expect roughly 5–8 wet diapers and 3–4 stools a day",
+          "Safe sleep ABCs: baby should sleep Alone (no blankets/toys/bumpers), on their Back, in a Crib or firm bassinet",
+          "Days and nights often feel reversed at first — this is normal and improves with time"
+        ],
+        "checkup_schedule": [
+          "Newborn visit (3–5 days old): feeding, wet diapers/stools, safe sleep, umbilical cord care",
+          "1 month: feeding difficulties, learning baby's cries, safe sleep, baby's sight",
+          "2, 4, 6 months: routine vaccines, feeding, sleep schedule",
+          "9 months: teething, introducing solids, rolling/sitting, babyproofing",
+          "12 months: developmental screening, healthy diet, first steps, first birthday!"
+        ]
+      },
+      "baby_growth": [
+        "May lose a little weight in the first 2 weeks, then regain it quickly",
+        "Starts focusing eyes and tracking faces, may begin smiling",
+        "Builds head and neck strength — tummy time begins (start with 20–30 sec sessions, build to 10 min/day)",
+        "Starts getting stronger, will soon hold their head up",
+        "Feeding, sleep and diaper patterns start becoming more predictable"
+      ],
+      "checkpoints": [
+        "Schedule newborn's first pediatrician visit (within 3–5 days of birth)",
+        "Watch for postpartum depression warning signs and share them with a support person",
+        "Begin daily tummy time",
+        "Follow the ABCs of safe sleep"
+      ]
+    }
+  ],
+  "suggested_new_topics": [
+    {
+      "title": "Labor & Delivery",
+      "reason": "Stages of labor, pain management options (epidural, nitrous oxide, natural techniques), when to go to the hospital — currently has no dedicated home in the app."
+    },
+    {
+      "title": "Postpartum & Recovery",
+      "reason": "Vaginal vs. C-section recovery, warning signs, self-care basics — a large topic area with no current category."
+    },
+    {
+      "title": "Baby Care Basics",
+      "reason": "Bathing, diapering, newborn hygiene, nail care, safe sleep (the ABCs: Alone, on Back, in a Crib)."
+    },
+    {
+      "title": "Birth Plan Builder",
+      "reason": "Could be an interactive checklist — support people, pain management preferences, atmosphere choices, post-delivery care wishes."
+    },
+    {
+      "title": "Genetic Testing & Screenings",
+      "reason": "Dense enough topic (carrier screening, cell-free DNA testing, amniocentesis, CVS) to warrant its own explainer rather than being buried in Health Monitoring."
+    },
+    {
+      "title": "Vaccine Schedule (0–12 months)",
+      "reason": "High-value, frequently searched — ties naturally into Health Monitoring, with a visit-by-visit breakdown."
+    },
+    {
+      "title": "Pregnancy Complications: What to Look For",
+      "reason": "Gestational diabetes, preeclampsia, anemia, placenta previa — important safety info currently missing entirely."
+    },
+    {
+      "title": "Breastfeeding Support",
+      "reason": "Benefits, positioning, common challenges (low supply, engorgement, clogged ducts) and solutions — large enough to be its own hub, cross-linked from Nutrition."
+    }
+  ]
+}
