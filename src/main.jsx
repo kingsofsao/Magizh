@@ -2842,34 +2842,57 @@ function App() {
   const [dataReady, setDataReady] = useState(false);
 
   useEffect(() => {
-    async function restoreSession() {
-      const token = localStorage.getItem("magizh-token");
-      if (!token) {
-        setAuthChecking(false);
-        return;
-      }
-      try {
-        const data = await API.request("/api/auth/me");
-        setAuth(data.user);
-        setProfile(data.profile);
-        if (data.profile?.language) setLanguage(data.profile.language);
-        const [r, c] = await Promise.all([
-          API.request("/api/reminders"),
-          API.request("/api/contacts")
-        ]);
-        setReminders(r.reminders || []);
-        setContacts(c.contacts || []);
-        setDataReady(true);
-      } catch {
-        localStorage.removeItem("magizh-token");
-        localStorage.removeItem("magizh-user");
-        localStorage.removeItem("magizh-profile");
-      } finally {
-        setAuthChecking(false);
-      }
+  async function restoreSession() {
+    const token = localStorage.getItem("magizh-token");
+
+    if (!token) {
+      setAuthChecking(false);
+      return;
     }
-    restoreSession();
-  }, []);
+
+    try {
+      const data = await API.request("/api/auth/me");
+
+      setAuth(data.user);
+      setProfile(data.profile);
+
+      if (data.profile?.language) {
+        setLanguage(data.profile.language);
+      }
+
+      try {
+        const r = await API.request("/api/reminders");
+        setReminders(r.reminders || []);
+      } catch (error) {
+        console.warn("Could not restore reminders:", error);
+        setReminders([]);
+      }
+
+      try {
+        const c = await API.request("/api/contacts");
+        setContacts(c.contacts || []);
+      } catch (error) {
+        console.warn("Could not restore contacts:", error);
+        setContacts([]);
+      }
+
+      setDataReady(true);
+    } catch (error) {
+      console.error("Session restore failed:", error);
+
+      localStorage.removeItem("magizh-token");
+      localStorage.removeItem("magizh-user");
+
+      setAuth(null);
+      setProfile(null);
+      setDataReady(false);
+    } finally {
+      setAuthChecking(false);
+    }
+  }
+
+  restoreSession();
+}, []);
 
   async function authenticated(data) {
     setAuth(data.user);
