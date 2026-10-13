@@ -41,7 +41,7 @@ import {
   X
 } from "lucide-react";
 import "./styles.css";
-import trimesterContent from "./pregnancy_trimester_content.json";
+import pregnancyContent from "./pregnancyContent.json";
 
 
 /* ============================================================
@@ -55,12 +55,7 @@ const API = {
     const headers = { ...(options.body instanceof FormData ? {} : { "Content-Type": "application/json" }), ...(options.headers || {}) };
     const token = API.token();
     if (token) headers.Authorization = `Bearer ${token}`;
-    let response;
-try {
-  response = await fetch(`${API_BASE}${path}`, { ...options, headers });
-} catch (error) {
-  throw new Error(`Unable to connect to Magizh server. ${error.message}`);
-}
+    const response = await fetch(`${API_BASE}${path}`, { ...options, headers });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.error || `Request failed (${response.status})`);
     return data;
@@ -72,6 +67,7 @@ function AuthScreen({ onAuthenticated }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -81,9 +77,12 @@ function AuthScreen({ onAuthenticated }) {
     setBusy(true);
     try {
       const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/signup";
+      const payload = mode === "login"
+        ? { email, password }
+        : { name, email, password, consent };
       const data = await API.request(endpoint, {
         method: "POST",
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify(payload)
       });
       localStorage.setItem("magizh-token", data.token);
       localStorage.setItem("magizh-user", JSON.stringify(data.user));
@@ -121,9 +120,19 @@ function AuthScreen({ onAuthenticated }) {
           )}
           <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" />
           <Input label="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Minimum 8 characters" autoComplete={mode === "login" ? "current-password" : "new-password"} />
+          {mode === "signup" && (
+            <label className="consent-row">
+              <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} />
+              <span>
+                I have read the privacy notice. I understand that my profile, reminders, vital readings
+                and community posts are stored on Magizh's server, that my questions to Magizh AI are
+                processed by an external AI service, and that my voice is processed by an external speech service.
+              </span>
+            </label>
+          )}
           {error && <div className="auth-error">{error}</div>}
-          <Button disabled={busy}>
-            {busy ? "Please waitâ€¦" : mode === "login" ? "Log in" : "Create account"}
+          <Button disabled={busy || (mode === "signup" && !consent)}>
+            {busy ? "Please wait…" : mode === "login" ? "Log in" : "Create account"}
             {!busy && <ArrowRight size={17} />}
           </Button>
         </form>
@@ -160,13 +169,14 @@ const C = {
    LANGUAGES
    ============================================================ */
 
+
 const LANGS = [
   ["en", "English"],
-  ["ta", "à®¤à®®à®¿à®´à¯"],
-  ["hi", "à¤¹à¤¿à¤¨à¥à¤¦à¥€"],
-  ["te", "à°¤à±†à°²à±à°—à±"],
-  ["kn", "à²•à²¨à³à²¨à²¡"],
-  ["ml", "à´®à´²à´¯à´¾à´³à´‚"]
+  ["ta", "தமிழ்"],
+  ["hi", "हिन्दी"],
+  ["te", "తెలుగు"],
+  ["kn", "ಕನ್ನಡ"],
+  ["ml", "മലയാളം"]
 ];
 
 const T = {
@@ -183,63 +193,63 @@ const T = {
   },
 
   ta: {
-    home: "à®®à¯à®•à®ªà¯à®ªà¯",
-    learn: "à®•à®±à¯à®•",
-    ai: "à®®à®•à®¿à®´à¯ AI",
-    community: "à®šà®®à¯‚à®•à®®à¯",
-    profile: "à®šà¯à®¯à®µà®¿à®µà®°à®®à¯",
-    reminders: "à®¨à®¿à®©à¯ˆà®µà¯‚à®Ÿà¯à®Ÿà®²à¯à®•à®³à¯",
-    add: "à®šà¯‡à®°à¯à®•à¯à®•",
-    contacts: "à®…à®µà®šà®° à®¤à¯Šà®Ÿà®°à¯à®ªà¯à®•à®³à¯",
-    settings: "à®…à®®à¯ˆà®ªà¯à®ªà¯à®•à®³à¯"
+    home: "முகப்பு",
+    learn: "கற்க",
+    ai: "மகிழ் AI",
+    community: "சமூகம்",
+    profile: "சுயவிவரம்",
+    reminders: "நினைவூட்டல்கள்",
+    add: "சேர்க்க",
+    contacts: "அவசர தொடர்புகள்",
+    settings: "அமைப்புகள்"
   },
 
   hi: {
-    home: "à¤¹à¥‹à¤®",
-    learn: "à¤¸à¥€à¤–à¥‡à¤‚",
-    ai: "à¤®à¤—à¤¿à¤à¤¼ AI",
-    community: "à¤¸à¤®à¥à¤¦à¤¾à¤¯",
-    profile: "à¤ªà¥à¤°à¥‹à¤«à¤¼à¤¾à¤‡à¤²",
-    reminders: "à¤°à¤¿à¤®à¤¾à¤‡à¤‚à¤¡à¤°",
-    add: "à¤œà¥‹à¤¡à¤¼à¥‡à¤‚",
-    contacts: "à¤†à¤ªà¤¾à¤¤à¤•à¤¾à¤²à¥€à¤¨ à¤¸à¤‚à¤ªà¤°à¥à¤•",
-    settings: "à¤¸à¥‡à¤Ÿà¤¿à¤‚à¤—à¥à¤¸"
+    home: "होम",
+    learn: "सीखें",
+    ai: "मगिझ़ AI",
+    community: "समुदाय",
+    profile: "प्रोफ़ाइल",
+    reminders: "रिमाइंडर",
+    add: "जोड़ें",
+    contacts: "आपातकालीन संपर्क",
+    settings: "सेटिंग्स"
   },
 
   te: {
-    home: "à°¹à±‹à°®à±",
-    learn: "à°¨à±‡à°°à±à°šà±à°•à±‹à°‚à°¡à°¿",
-    ai: "à°®à°—à°¿à°à± AI",
-    community: "à°¸à°‚à°˜à°‚",
-    profile: "à°ªà±à°°à±Šà°«à±ˆà°²à±",
-    reminders: "à°°à°¿à°®à±ˆà°‚à°¡à°°à±â€Œà°²à±",
-    add: "à°œà±‹à°¡à°¿à°‚à°šà°‚à°¡à°¿",
-    contacts: "à°…à°¤à±à°¯à°µà°¸à°° à°ªà°°à°¿à°šà°¯à°¾à°²à±",
-    settings: "à°¸à±†à°Ÿà±à°Ÿà°¿à°‚à°—à±â€Œà°²à±"
+    home: "హోమ్",
+    learn: "నేర్చుకోండి",
+    ai: "మగిఝ్ AI",
+    community: "సంఘం",
+    profile: "ప్రొఫైల్",
+    reminders: "రిమైండర్‌లు",
+    add: "జోడించండి",
+    contacts: "అత్యవసర పరిచయాలు",
+    settings: "సెట్టింగ్‌లు"
   },
 
   kn: {
-    home: "à²®à³à²–à²ªà³à²Ÿ",
-    learn: "à²•à²²à²¿à²¯à²¿à²°à²¿",
-    ai: "à²®à²—à²¿à²à³ AI",
-    community: "à²¸à²®à³à²¦à²¾à²¯",
-    profile: "à²ªà³à²°à³Šà²«à³ˆà²²à³",
-    reminders: "à²œà³à²žà²¾à²ªà²¨à³†à²—à²³à³",
-    add: "à²¸à³‡à²°à²¿à²¸à²¿",
-    contacts: "à²¤à³à²°à³à²¤à³ à²¸à²‚à²ªà²°à³à²•à²—à²³à³",
-    settings: "à²¸à³†à²Ÿà³à²Ÿà²¿à²‚à²—à³â€Œà²—à²³à³"
+    home: "ಮುಖಪುಟ",
+    learn: "ಕಲಿಯಿರಿ",
+    ai: "ಮಗಿಝ್ AI",
+    community: "ಸಮುದಾಯ",
+    profile: "ಪ್ರೊಫೈಲ್",
+    reminders: "ಜ್ಞಾಪನೆಗಳು",
+    add: "ಸೇರಿಸಿ",
+    contacts: "ತುರ್ತು ಸಂಪರ್ಕಗಳು",
+    settings: "ಸೆಟ್ಟಿಂಗ್‌ಗಳು"
   },
 
   ml: {
-    home: "à´¹àµ‹à´‚",
-    learn: "à´ªà´ à´¿à´•àµà´•àµà´•",
-    ai: "à´®à´—à´¿à´´àµ AI",
-    community: "à´•à´®àµà´®àµà´¯àµ‚à´£à´¿à´±àµà´±à´¿",
-    profile: "à´ªàµà´°àµŠà´«àµˆàµ½",
-    reminders: "à´±à´¿à´®àµˆàµ»à´¡à´±àµà´•àµ¾",
-    add: "à´šàµ‡àµ¼à´•àµà´•àµà´•",
-    contacts: "à´Žà´®àµ¼à´œàµ»à´¸à´¿ à´•àµ‹àµºà´Ÿà´¾à´•àµà´±àµà´±àµà´•àµ¾",
-    settings: "à´¸àµ†à´±àµà´±à´¿à´‚à´—àµà´¸àµ"
+    home: "ഹോം",
+    learn: "പഠിക്കുക",
+    ai: "മഗിഴ് AI",
+    community: "കമ്മ്യൂണിറ്റി",
+    profile: "പ്രൊഫൈൽ",
+    reminders: "റിമൈൻഡറുകൾ",
+    add: "ചേർക്കുക",
+    contacts: "എമർജൻസി കോൺടാക്റ്റുകൾ",
+    settings: "സെറ്റിംഗ്സ്"
   }
 };
 
@@ -436,9 +446,27 @@ function Button({
   );
 }
 
-function Card({ children, className = "" }) {
+function Card({ children, className = "", onClick, ...props }) {
+  const isClickable = Boolean(onClick);
+
   return (
-    <div className={`card ${className}`}>
+    <div
+      className={`card ${className}`}
+      onClick={onClick}
+      onKeyDown={
+        isClickable
+          ? (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onClick(event);
+              }
+            }
+          : undefined
+      }
+      role={isClickable ? "button" : props.role}
+      tabIndex={isClickable ? 0 : props.tabIndex}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -504,7 +532,7 @@ function Splash({ done }) {
       <h1>Magizh</h1>
 
       <p>
-        à®®à®•à®¿à®´à¯ Â· joy, for every motherhood
+        மகிழ் · joy, for every motherhood
       </p>
     </div>
   );
@@ -1040,7 +1068,7 @@ function HomePage({
           </span>
 
           <h1>
-            {p.name} ðŸŒ¸
+            {p.name} 🌸
           </h1>
         </div>
 
@@ -1064,13 +1092,13 @@ function HomePage({
               ? "POSTNATAL"
               : `TRIMESTER ${preg.trimester}`
             }
-            {" Â· HEALTH "}
+            {" · HEALTH "}
             {score}
           </span>
 
           <h2>
             {post
-              ? `${p.babyName || "Your baby"} Â· ${preg.ageWeeks}w old`
+              ? `${p.babyName || "Your baby"} · ${preg.ageWeeks}w old`
               : `Week ${preg.week}`
             }
           </h2>
@@ -1188,9 +1216,9 @@ function HomePage({
 
                     <span className="muted">
                       {reminder.date}
-                      {" Â· "}
+                      {" · "}
                       {reminder.time}
-                      {" Â· "}
+                      {" · "}
                       {reminder.repeat}
                     </span>
 
@@ -1353,15 +1381,143 @@ function TrimesterDetail({ trimester, onBack }) {
 }
 
 function Learn() {
-  const [selected, setSelected] = useState(null);
+  const [selectedTopicId, setSelectedTopicId] = useState(null);
+  const [selectedTrimesterId, setSelectedTrimesterId] = useState(null);
+  const [selectedSchemeId, setSelectedSchemeId] = useState(null);
   const [query, setQuery] = useState("");
 
   const trimesterData = [
-    { id: "first_trimester", label: "First Trimester", weeks: "0â€“13" },
-    { id: "second_trimester", label: "Second Trimester", weeks: "14â€“27" },
-    { id: "third_trimester", label: "Third Trimester", weeks: "28â€“40" },
-    { id: "fourth_trimester", label: "Fourth Trimester", weeks: "41â€“52 Â· postpartum" }
+    { id: "first_trimester", label: "First Trimester", weeks: "0–13" },
+    { id: "second_trimester", label: "Second Trimester", weeks: "14–27" },
+    { id: "third_trimester", label: "Third Trimester", weeks: "28–40" },
   ];
+
+  const schemeData = [
+    {
+      id: "scheme_maternity_benefit",
+      title: "Pardhan Mantri Matru Vandana Yojana (PMMVY)",
+      category: "Benefits",
+      summary: "Financial assistance of ₹5,000 in installments for eligible first-time pregnant and lactating mothers to partly compensate for wage loss.",
+      overview: "This scheme placeholder can be used to explain eligibility, benefits, documents required, and how to apply.",
+      details: [
+        "Eligibility criteria placeholder",
+        "Benefit amount and payment timing placeholder",
+        "Required documents and application steps placeholder"
+      ]
+    },
+    {
+      id: "scheme_picme",
+      title: "Pregnancy & Infant Cohort Monitoring & Evaluation (PICME)",
+      category: "Health",
+      summary: "Registers pregnancies, issues an RCH ID, and helps mothers access maternity benefits and care alerts.",
+      overview: "Add details about who can access this support, what services are included, and where the scheme is available.",
+      details: [
+        "Included services placeholder",
+        "Referral or enrollment process placeholder",
+        "Who is eligible placeholder"
+      ]
+    },
+    {
+      id: "scheme_cmchis",
+      title: "Chief Ministe Comprehensive Health Insurance Scheme (CMCHIS)",
+      category: "Childcare",
+      summary: "Cashless treatment up to 25 lakh per family per year, covering many pregnancy-related procedures.",
+      overview: "Use this section to explain the newborn care package, timelines, and the benefits available after delivery.",
+      details: [
+        "Newborn screening steps placeholder",
+        "Vaccination or follow-up reminder placeholder",
+        "Support contacts placeholder"
+      ]
+    },
+    {
+      id: "scheme_poshan",
+      title: "POSHAN Abhiyaan",
+      category: "Childcare",
+      summary: "National nutrition mission providing supplementary nutrition and counselling to pregnant women and children.",
+      overview: "Use this section to explain the newborn care package, timelines, and the benefits available after delivery.",
+      details: [
+        "Nutrition support details placeholder",
+        "Counselling and follow-up placeholder",
+        "Local service access placeholder"
+      ]
+    },
+    {
+      id: "scheme_icds",
+      title: "Integrated Child Development Services (ICDS)",
+      category: "Childcare",
+      summary: "Supplementary nutrition, immunisation, health check-ups, and pre-school education via Anganwadi centres.",
+      overview: "Use this section to explain the newborn care package, timelines, and the benefits available after delivery.",
+      details: [
+        "Anganwadi services placeholder",
+        "Immunisation and growth monitoring placeholder",
+        "Support centre contact details placeholder"
+      ]
+    },
+    {
+      id: "scheme_pmsma",
+      title: "Pradhan Mantri Surakshit Matritva Abhiyan (PMSMA)",
+      category: "Childcare",
+      summary: "Free antenatal check-ups on the 9th of every month for women in their 2nd and 3rd trimesters.",
+      overview: "Use this section to explain the newborn care package, timelines, and the benefits available after delivery.",
+      details: [
+        "Free check-up schedule placeholder",
+        "Recommended diagnostics placeholder",
+        "Provider and referral details placeholder"
+      ]
+    }
+  ];
+
+  const topicDetailContent = {
+    nutrition: {
+      intro: "A balanced diet during pregnancy supports both your health and your baby's development. These tips are meant to guide everyday choices and help you make informed, sustainable food decisions.",
+      sections: [
+        { title: "Core nutrition guidance", items: ["Focus on protein, fibre, iron-rich foods, fruits, vegetables, and healthy fats placeholder.", "Aim for regular meals and hydration to support energy and digestion placeholder.", "Discuss diet changes with your healthcare provider if you have gestational diabetes, anemia, or medical restrictions placeholder."] },
+        { title: "What to watch for", items: ["Limit processed foods, excess caffeine, and food safety risks placeholder.", "Track nausea, cravings, and appetite changes as part of your routine care placeholder.", "Ask about supplementation when needed, especially iron and folate placeholder."] }
+      ]
+    },
+    exercise: {
+      intro: "Gentle movement can help support comfort, circulation, and overall wellbeing through pregnancy. Keep activities safe, symptom-aware, and based on your clinician's guidance.",
+      sections: [
+        { title: "Movement ideas", items: ["Walking, stretching, and light strengthening are common low-impact options placeholder.", "Prioritise comfort, hydration, and rest before and after exercise placeholder.", "Stop and seek advice if you feel dizzy, short of breath, or experience pelvic pain placeholder."] },
+        { title: "Safe routines", items: ["Use a comfortable pace and avoid overheating or high-risk activities placeholder.", "Build a routine that fits your trimester and energy level placeholder.", "Check with your clinician before starting a new fitness plan placeholder."] }
+      ]
+    },
+    medicines: {
+      intro: "This section is a place to record medicines, supplements, and safety questions before you consult your pharmacist or healthcare team.",
+      sections: [
+        { title: "Before taking anything", items: ["Confirm the medicine is appropriate for pregnancy and your stage of care placeholder.", "Ask about dosage, interactions with prenatal vitamins, and common side effects placeholder.", "Bring a list of all prescriptions, supplements, and over-the-counter products placeholder."] },
+        { title: "Helpful reminders", items: ["Never stop a prescribed medicine suddenly without checking with your clinician placeholder.", "Use the lowest effective dose and ask about non-drug alternatives when possible placeholder.", "Inform your care team about allergies, past reactions, or new symptoms placeholder."] }
+      ]
+    },
+    monitoring: {
+      intro: "Health monitoring helps you notice patterns, track concerns, and bring the right information to your appointments.",
+      sections: [
+        { title: "Track and review", items: ["Record blood pressure, symptoms, appointments, and test dates placeholder.", "Note any reduction in movement, bleeding, pain, dizziness, or changes in wellbeing placeholder.", "Review trends with your clinician rather than checking one-off numbers alone placeholder."] },
+        { title: "When to call", items: ["Seek urgent care for severe pain, heavy bleeding, or difficulty breathing placeholder.", "Confirm timing for screening tests and follow-up visits placeholder.", "Keep all notes in one place so your care team can review patterns quickly placeholder."] }
+      ]
+    },
+    mental: {
+      intro: "Mental wellbeing matters just as much as physical health. This space is for emotion tracking, support, stress management, and recognising when extra help is useful.",
+      sections: [
+        { title: "Support strategies", items: ["Build rest, social support, and calm routines into everyday life placeholder.", "Talk with a trusted person about stress, worry, or emotional exhaustion placeholder.", "Use a clinician or therapist if mood changes feel intense or lasting placeholder."] },
+        { title: "Warning signs", items: ["Persistent sadness, panic, hopelessness, or extreme agitation should be checked promptly placeholder.", "Difficulty functioning at work, home, or in relationships may deserve support placeholder.", "Your emotional health is valid and worth discussing honestly placeholder."] }
+      ]
+    },
+    baby: {
+      intro: "Newborn and baby development information helps you follow milestones, understand sleep and feeding patterns, and know what to look out for.",
+      sections: [
+        { title: "Growth and routines", items: ["Track feeding, sleep, diaper changes, and developmental milestones placeholder.", "Notice patterns in movement, alertness, and how your baby settles placeholder.", "Build your routine around what feels sustainable and safe for your family placeholder."] },
+        { title: "Common milestones", items: ["Safe sleep, tummy time, feeding cues, and hygiene are key foundations placeholder.", "Check in with your pediatrician for any concerns around growth or development placeholder.", "Keep a list of questions to ask at baby visits placeholder."] }
+      ]
+    },
+    schemes: {
+      intro: "Government schemes can provide financial, nutritional, and healthcare support. This section is a placeholder for the official information you will add later.",
+      sections: [
+        { title: "What to include", items: ["Eligibility rules and who can apply placeholder.", "Benefits, cash support, or service coverage placeholder.", "Documents needed and how to apply placeholder."] },
+        { title: "Helpful note", items: ["Always verify details with the official scheme portal or local government office placeholder.", "Keep a list of reference links and support contacts here placeholder.", "Check application deadlines and renewal steps before they expire placeholder."] }
+      ]
+    }
+  };
 
   const topics = [
     {
@@ -1431,11 +1587,15 @@ function Learn() {
     }
   ];
 
-  const current = selected
-    ? pregnancyContent.trimesters.find(x => x.id === selected)
+  const current = selectedTrimesterId
+    ? pregnancyContent.trimesters.find(x => x.id === selectedTrimesterId)
     : null;
 
-  const selectedTopic = topics.find(x => x.id === selected);
+  const currentScheme = selectedSchemeId
+    ? schemeData.find(x => x.id === selectedSchemeId)
+    : null;
+
+  const selectedTopic = topics.find(x => x.id === selectedTopicId);
 
   const visibleTopics = topics.filter(topic =>
     `${topic.title} ${topic.description}`
@@ -1456,7 +1616,10 @@ function Learn() {
   if (current) {
     return (
       <div className="page">
-        <button className="back-btn" onClick={() => setSelected("pregnancy")}>
+        <button className="back-btn" onClick={() => {
+          setSelectedTrimesterId(null);
+          setSelectedTopicId("pregnancy");
+        }}>
           <ChevronLeft size={17} /> Back to Pregnancy
         </button>
 
@@ -1495,16 +1658,62 @@ function Learn() {
     );
   }
 
-  if (selectedTopic) {
+  if (currentScheme) {
     return (
       <div className="page">
-        <button className="back-btn" onClick={() => setSelected(null)}>
+        <button className="back-btn" onClick={() => {
+          setSelectedSchemeId(null);
+          setSelectedTopicId("schemes");
+        }}>
+          <ChevronLeft size={17} /> Back to Schemes
+        </button>
+
+        <div className="page-title">
+          <Landmark />
+          <div>
+            <h1>{currentScheme.title}</h1>
+            <p className="muted">{currentScheme.category}</p>
+          </div>
+        </div>
+
+        <Card className="learn-intro">
+          <p>{currentScheme.overview}</p>
+        </Card>
+
+        {section("Key details", currentScheme.details)}
+
+        <Card className="warning">
+          <AlertTriangle size={21} />
+          <div>
+            <b>Placeholder content</b>
+            <p>
+              Replace this example text with the official scheme details, eligibility rules, and application steps once you are ready.
+            </p>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  if (selectedTopic) {
+    const topicDetails = topicDetailContent[selectedTopic.id];
+
+    return (
+      <div className="page">
+        <button className="back-btn" onClick={() => {
+          setSelectedTopicId(null);
+          setSelectedTrimesterId(null);
+          setSelectedSchemeId(null);
+        }}>
           <ChevronLeft size={17} /> Back to Learn
         </button>
 
         <div className="learn-detail-hero">
           <div className={`learn-topic-icon ${selectedTopic.tone}`}>
-            <selectedTopic.icon size={30} strokeWidth={1.9} />
+            {(() => {
+              const Icon = selectedTopic.icon;
+              return <Icon size={30} strokeWidth={1.9} />;
+            })()}
           </div>
           <div>
             <span className="eyebrow dark">LEARN</span>
@@ -1525,7 +1734,10 @@ function Learn() {
                   <Card
                     key={item.id}
                     className="learn-guide-card clickable"
-                    onClick={() => setSelected(item.id)}
+                    onClick={() => {
+                      setSelectedTrimesterId(item.id);
+                      setSelectedTopicId("pregnancy");
+                    }}
                   >
                     <span className="eyebrow dark">{item.weeks}</span>
                     <h3>{item.label}</h3>
@@ -1538,19 +1750,57 @@ function Learn() {
           </>
         )}
 
-        {selectedTopic.id !== "pregnancy" && (
+        {selectedTopic.id === "schemes" && (
+          <>
+            <div className="section-head">
+              <h2>Available schemes</h2>
+            </div>
+            <div className="learn-guide-grid">
+              {schemeData.map(item => (
+                <Card
+                  key={item.id}
+                  className="learn-guide-card clickable"
+                  onClick={() => {
+                    setSelectedSchemeId(item.id);
+                    setSelectedTopicId("schemes");
+                  }}
+                >
+                  <span className="eyebrow dark">{item.category}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.summary}</p>
+                  <span className="text-btn">View details <ChevronRight size={14} /></span>
+                </Card>
+              ))}
+            </div>
+          </>
+        )}
+
+        {selectedTopic.id !== "pregnancy" && selectedTopic.id !== "schemes" && topicDetails && (
           <>
             <Card className="learn-intro">
-              <p>{selectedTopic.detail}</p>
+              <p>{topicDetails.intro}</p>
             </Card>
-            <div className="learn-section">
-              <h3>Helpful reminders</h3>
-              <ul>
-                <li>Use information here as general education, not as a diagnosis.</li>
-                <li>Bring questions and changes you notice to your healthcare provider.</li>
-                <li>For severe or urgent symptoms, seek medical care promptly.</li>
-              </ul>
-            </div>
+
+            {topicDetails.sections.map((sectionItem, index) => (
+              <div className="learn-section" key={`${selectedTopic.id}-${index}`}>
+                <h3>{sectionItem.title}</h3>
+                <ul>
+                  {sectionItem.items.map((item, itemIndex) => (
+                    <li key={`${selectedTopic.id}-${index}-${itemIndex}`}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+
+            <Card className="warning">
+              <AlertTriangle size={21} />
+              <div>
+                <b>Placeholder detail page</b>
+                <p>
+                  Add the final content for this topic here once you are ready, while keeping this page structure intact.
+                </p>
+              </div>
+            </Card>
           </>
         )}
       </div>
@@ -1564,7 +1814,7 @@ function Learn() {
           <div className="learn-brand-mark"><Heart size={22} fill="currentColor" /></div>
           <strong>Learn</strong>
         </div>
-        <div className="language-chip"><Globe size={16} /> EN</div>
+        <div className="language-chip"><Globe size={16} /> {(language || "en").toUpperCase()}</div>
       </div>
 
       <div className="learn-heading">
@@ -1595,7 +1845,11 @@ function Learn() {
               type="button"
               className="learn-topic-card"
               key={topic.id}
-              onClick={() => setSelected(topic.id)}
+              onClick={() => {
+                setSelectedTopicId(topic.id);
+                setSelectedTrimesterId(null);
+                setSelectedSchemeId(null);
+              }}
             >
               <div className={`learn-topic-icon ${topic.tone}`}>
                 <Icon size={29} strokeWidth={1.9} />
@@ -1630,7 +1884,7 @@ function Learn() {
    AI
    ============================================================ */
 
-function AIPage({ profile }) {
+function AIPage({ profile, language }) {
 
   const [messages, setMessages] = useState([
     {
@@ -1661,15 +1915,17 @@ function AIPage({ profile }) {
         method: "POST",
         body: JSON.stringify({
           question: userText,
+          language: language || "en",
           profile,
           history: messages.slice(-8).map(message => ({ role: message.role, text: message.text }))
         })
       });
       setMessages(current => [...current, { role: "ai", text: data.answer }]);
     } catch (error) {
+      console.error("Chat request failed:", error);
       setMessages(current => [...current, {
         role: "ai",
-        text: `I couldn't reach Ollama right now. ${error.message} Start Ollama and make sure the model in .env is available.`
+        text: "I'm unable to answer right now. Please try again in a moment."
       }]);
     } finally {
       setLoading(false);
@@ -1682,7 +1938,7 @@ function AIPage({ profile }) {
     try {
       const response = await fetch(`${API_BASE}/api/voice/speak`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${API.token()}` },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${API.token() || ""}` },
         body: JSON.stringify({ text })
       });
       if (!response.ok) {
@@ -1728,6 +1984,7 @@ function AIPage({ profile }) {
         try {
           const form = new FormData();
           form.append("audio", blob, "magizh-question.webm");
+          form.append("language", language || "en");
           const data = await API.request("/api/voice/transcribe", { method: "POST", body: form });
           if (data.text?.trim()) {
             setQuestion(data.text.trim());
@@ -1763,7 +2020,7 @@ function AIPage({ profile }) {
         <Sparkles />
         <div>
           <h1>Magizh AI</h1>
-          <p className="muted">Powered by Ollama Â· voice by ElevenLabs</p>
+          <p className="muted">Powered by Ollama · voice by ElevenLabs</p>
         </div>
       </div>
 
@@ -1778,7 +2035,7 @@ function AIPage({ profile }) {
             )}
           </div>
         ))}
-        {loading && <div className="bubble ai">Thinking with Ollamaâ€¦</div>}
+        {loading && <div className="bubble ai">Thinking with Ollama…</div>}
       </div>
 
       {voiceError && <div className="voice-error">{voiceError}</div>}
@@ -1797,7 +2054,7 @@ function AIPage({ profile }) {
           value={question}
           onChange={e => setQuestion(e.target.value)}
           onKeyDown={e => { if (e.key === "Enter") sendText(); }}
-          placeholder={listening ? "Listeningâ€¦" : "Ask Magizh AIâ€¦"}
+          placeholder={listening ? "Listening…" : "Ask Magizh AI…"}
           disabled={loading || listening}
         />
         <button onClick={() => sendText()} disabled={!question.trim() || loading} aria-label="Send">
@@ -1805,7 +2062,7 @@ function AIPage({ profile }) {
         </button>
       </div>
       <p className="voice-hint">
-        {listening ? "Recordingâ€¦ tap the microphone again to send." : "Tap the microphone to speak. Magizh uses ElevenLabs Scribe for transcription and ElevenLabs for spoken answers."}
+        {listening ? "Recording… tap the microphone again to send." : "Tap the microphone to speak. Magizh uses ElevenLabs Scribe for transcription and ElevenLabs for spoken answers."}
       </p>
     </div>
   );
@@ -1813,120 +2070,148 @@ function AIPage({ profile }) {
 
 /* ============================================================
    COMMUNITY
-   ============================================================
+   ============================================================ */
 
-function Community({ profileName = "You" }) {
-  const defaultPosts = [
-    {
-      id: 1,
-      name: "Ananya",
-      time: "2h",
-      text: "What helped you stay hydrated during the third trimester?",
-      likes: 12,
-      liked: false,
-      comments: [
-        { id: 11, name: "Meena", text: "Keeping a bottle with me all day really helped.", time: "1h" },
-        { id: 12, name: "Kavya", text: "I also set small reminders to drink water regularly.", time: "45m" }
-      ]
-    },
-    {
-      id: 2,
-      name: "Meena",
-      time: "5h",
-      text: "I made a checklist for my hospital bag. Happy to share the categories if anyone needs it.",
-      likes: 21,
-      liked: false,
-      comments: [
-        { id: 21, name: "Ananya", text: "Yes please! That would be really helpful.", time: "3h" }
-      ]
-    }
-  ];
+function relativeTime(iso) {
+  if (!iso) return "";
+  const seconds = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+  if (seconds < 60) return "now";
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h`;
+  return `${Math.floor(seconds / 86400)}d`;
+}
 
-  const [posts, setPosts] = useState(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem("magizh-community-posts") || "null");
-      return Array.isArray(saved) && saved.length ? saved : defaultPosts;
-    } catch {
-      return defaultPosts;
-    }
-  });
+// Converts an API post into the shape the feed renders.
+function toFeedPost(post) {
+  return {
+    id: post.id,
+    name: post.authorName,
+    time: relativeTime(post.createdAt),
+    text: post.body,
+    likes: post.likes,
+    liked: post.likedByMe,
+    mine: post.mine,
+    comments: (post.comments || []).map(comment => ({
+      id: comment.id,
+      name: comment.authorName,
+      text: comment.body,
+      time: relativeTime(comment.createdAt),
+      mine: comment.mine
+    }))
+  };
+}
 
+function Community() {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [feedError, setFeedError] = useState("");
+  const [actionError, setActionError] = useState("");
   const [newPost, setNewPost] = useState("");
   const [commentDrafts, setCommentDrafts] = useState({});
-  const [openComments, setOpenComments] = useState(
-    () => Object.fromEntries(defaultPosts.map(post => [post.id, true]))
-  );
+  const [sortMode, setSortMode] = useState("recent");
+  const [openComments, setOpenComments] = useState({});
 
   useEffect(() => {
-    localStorage.setItem("magizh-community-posts", JSON.stringify(posts));
-  }, [posts]);
+    API.request("/api/community/posts")
+      .then(data => setPosts((data.posts || []).map(toFeedPost)))
+      .catch(err => setFeedError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function attempt(action) {
+    setActionError("");
+    try {
+      await action();
+    } catch (err) {
+      setActionError(err.message);
+    }
+  }
 
   function createPost() {
     const text = newPost.trim();
     if (!text) return;
-
-    setPosts(current => [
-      {
-        id: Date.now(),
-        name: profileName || "You",
-        time: "now",
-        text,
-        likes: 0,
-        liked: false,
-        comments: []
-      },
-      ...current
-    ]);
-    setNewPost("");
+    attempt(async () => {
+      const data = await API.request("/api/community/posts", {
+        method: "POST",
+        body: JSON.stringify({ body: text })
+      });
+      setPosts(current => [toFeedPost(data.post), ...current]);
+      setNewPost("");
+    });
   }
 
   function toggleLike(postId) {
-    setPosts(current =>
-      current.map(post =>
-        post.id === postId
-          ? {
-              ...post,
-              liked: !post.liked,
-              likes: Math.max(0, post.likes + (post.liked ? -1 : 1))
-            }
-          : post
-      )
-    );
+    attempt(async () => {
+      const data = await API.request(`/api/community/posts/${postId}/like`, { method: "POST" });
+      setPosts(current =>
+        current.map(post => (post.id === postId ? { ...post, liked: data.liked, likes: data.likes } : post))
+      );
+    });
   }
 
   function addComment(postId) {
     const text = (commentDrafts[postId] || "").trim();
     if (!text) return;
+    attempt(async () => {
+      const data = await API.request(`/api/community/posts/${postId}/comments`, {
+        method: "POST",
+        body: JSON.stringify({ body: text })
+      });
+      const comment = {
+        id: data.comment.id,
+        name: data.comment.authorName,
+        text: data.comment.body,
+        time: "now",
+        mine: true
+      };
+      setPosts(current =>
+        current.map(post => (post.id === postId ? { ...post, comments: [...post.comments, comment] } : post))
+      );
+      setCommentDrafts(current => ({ ...current, [postId]: "" }));
+      setOpenComments(current => ({ ...current, [postId]: true }));
+    });
+  }
 
-    setPosts(current =>
-      current.map(post =>
-        post.id === postId
-          ? {
-              ...post,
-              comments: [
-                ...(post.comments || []),
-                {
-                  id: Date.now(),
-                  name: profileName || "You",
-                  text,
-                  time: "now"
-                }
-              ]
-            }
-          : post
-      )
-    );
+  function deletePost(postId) {
+    attempt(async () => {
+      await API.request(`/api/community/posts/${postId}`, { method: "DELETE" });
+      setPosts(current => current.filter(post => post.id !== postId));
+    });
+  }
 
-    setCommentDrafts(current => ({ ...current, [postId]: "" }));
-    setOpenComments(current => ({ ...current, [postId]: true }));
+  function deleteComment(postId, commentId) {
+    attempt(async () => {
+      await API.request(`/api/community/comments/${commentId}`, { method: "DELETE" });
+      setPosts(current =>
+        current.map(post =>
+          post.id === postId
+            ? { ...post, comments: post.comments.filter(comment => comment.id !== commentId) }
+            : post
+        )
+      );
+    });
   }
 
   function toggleComments(postId) {
-    setOpenComments(current => ({
-      ...current,
-      [postId]: !current[postId]
-    }));
+    setOpenComments(current => ({ ...current, [postId]: !current[postId] }));
   }
+
+  // Community sorting is derived from the live post state, so likes and
+  // comments immediately affect the order without mutating the source array.
+  const sortedPosts = [...posts].sort((a, b) => {
+    const aComments = (a.comments || []).length;
+    const bComments = (b.comments || []).length;
+    const aLikes = Number(a.likes || 0);
+    const bLikes = Number(b.likes || 0);
+
+    if (sortMode === "likes") {
+      return bLikes - aLikes || bComments - aComments || Number(b.id) - Number(a.id);
+    }
+    if (sortMode === "comments") {
+      return bComments - aComments || bLikes - aLikes || Number(b.id) - Number(a.id);
+    }
+    return Number(b.id) - Number(a.id);
+  });
 
   return (
     <div className="page community-page">
@@ -1942,7 +2227,7 @@ function Community({ profileName = "You" }) {
         <textarea
           value={newPost}
           onChange={e => setNewPost(e.target.value)}
-          placeholder="Share a question or experienceâ€¦"
+          placeholder="Share a question or experience…"
           maxLength={500}
         />
         <div className="community-compose-footer">
@@ -1953,8 +2238,33 @@ function Community({ profileName = "You" }) {
         </div>
       </Card>
 
+      <div className="community-sortbar">
+        <span className="community-sort-label">Sort thoughts by</span>
+        <div className="community-sort-options">
+          {[
+            ["recent", "Recent"],
+            ["likes", "Most liked"],
+            ["comments", "Most discussed"]
+          ].map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              className={sortMode === value ? "filter active" : "filter"}
+              onClick={() => setSortMode(value)}
+              aria-pressed={sortMode === value}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {feedError && <div className="auth-error">{feedError}</div>}
+      {actionError && <div className="auth-error">{actionError}</div>}
+      {loading && <p className="muted">Loading posts…</p>}
+
       <div className="community-feed">
-        {posts.map(post => {
+        {sortedPosts.map(post => {
           const comments = post.comments || [];
           const isOpen = Boolean(openComments[post.id]);
 
@@ -1988,6 +2298,12 @@ function Community({ profileName = "You" }) {
                   <MessageCircle size={17} />
                   {comments.length} {comments.length === 1 ? "comment" : "comments"}
                 </button>
+
+                {post.mine && (
+                  <button type="button" className="action-btn" onClick={() => deletePost(post.id)}>
+                    Delete
+                  </button>
+                )}
               </div>
 
               <div className="comments-panel">
@@ -2011,6 +2327,11 @@ function Community({ profileName = "You" }) {
                                 <span>{comment.time}</span>
                               </div>
                               <p>{comment.text}</p>
+                              {comment.mine && (
+                                <button type="button" className="comment-delete" onClick={() => deleteComment(post.id, comment.id)}>
+                                  Delete
+                                </button>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -2065,6 +2386,60 @@ function Community({ profileName = "You" }) {
 /* ============================================================
    PROFILE
    ============================================================ */
+
+function DeleteAccount({ onDeleted }) {
+  const [open, setOpen] = useState(false);
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function deleteAccount(e) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      await API.request("/api/auth/account", {
+        method: "DELETE",
+        body: JSON.stringify({ password })
+      });
+      onDeleted();
+    } catch (err) {
+      setError(err.message);
+      setBusy(false);
+    }
+  }
+
+  if (!open) {
+    return (
+      <button type="button" className="danger-btn" onClick={() => setOpen(true)}>
+        Delete my account
+      </button>
+    );
+  }
+
+  return (
+    <form className="delete-account" onSubmit={deleteAccount}>
+      <p className="muted">
+        This permanently deletes your profile, reminders, contacts, vital readings,
+        community posts and chat history. It cannot be undone.
+      </p>
+      <Input
+        label="Confirm with your password"
+        type="password"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        autoComplete="current-password"
+      />
+      {error && <div className="auth-error">{error}</div>}
+      <Button disabled={busy || !password}>
+        {busy ? "Deleting…" : "Permanently delete account"}
+      </Button>
+      <button type="button" className="action-btn" onClick={() => setOpen(false)}>
+        Cancel
+      </button>
+    </form>
+  );
+}
 
 function Profile({
   p,
@@ -2223,19 +2598,22 @@ function Profile({
         </h2>
 
         <p className="muted">
-          This prototype stores demo data in your
-          browser. It is not a clinical record and
-          has no real healthcare-provider integration.
+          Your profile, reminders, contacts, vital readings and community posts are stored on
+          Magizh's server. Questions to Magizh AI are processed by an external AI service, and voice
+          by an external speech service. This is an educational tool, not a clinical record.
         </p>
 
       </Card>
 
       <button
+        type="button"
         className="danger-btn"
         onClick={onReset}
       >
-        Reset local demo
+        Log out
       </button>
+
+      <DeleteAccount onDeleted={onReset} />
 
       {editing && (
 
@@ -2538,97 +2916,110 @@ function ReminderModal({
    VITAL MODAL
    ============================================================ */
 
-function VitalModal({
-  onClose,
-  onSave
-}) {
+const VITAL_TYPES = ["Blood pressure", "Weight", "Heart rate", "Temperature"];
 
-  const [vital, setVital] =
-    useState({
-      type: "Blood pressure",
-      value: "",
-      note: ""
-    });
+function formatReadingTime(iso) {
+  if (!iso) return "";
+  return new Date(iso).toLocaleString(undefined, {
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit"
+  });
+}
+
+function VitalModal({ onClose }) {
+  const [vital, setVital] = useState({ type: VITAL_TYPES[0], value: "", note: "" });
+  const [readings, setReadings] = useState([]);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    API.request("/api/vitals")
+      .then(data => setReadings(data.vitals || []))
+      .catch(err => setError(err.message));
+  }, []);
+
+  async function saveReading() {
+    setBusy(true);
+    setError("");
+    try {
+      const data = await API.request("/api/vitals", {
+        method: "POST",
+        body: JSON.stringify(vital)
+      });
+      setReadings(current => [data.vital, ...current]);
+      setVital(current => ({ ...current, value: "", note: "" }));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function deleteReading(id) {
+    setError("");
+    try {
+      await API.request(`/api/vitals/${id}`, { method: "DELETE" });
+      setReadings(current => current.filter(reading => reading.id !== id));
+    } catch (err) {
+      setError(err.message);
+    }
+  }
 
   return (
-    <Modal
-      title="Log a vital"
-      onClose={onClose}
-    >
-
+    <Modal title="Log a vital" onClose={onClose}>
       <div className="pills">
-
-        {[
-          "Blood pressure",
-          "Weight",
-          "Heart rate",
-          "Temperature"
-        ].map(type => (
-
+        {VITAL_TYPES.map(type => (
           <button
             key={type}
-            className={
-              "pill " +
-              (
-                vital.type === type
-                  ? "active"
-                  : ""
-              )
-            }
-            onClick={() =>
-              setVital({
-                ...vital,
-                type
-              })
-            }
+            className={"pill " + (vital.type === type ? "active" : "")}
+            onClick={() => setVital({ ...vital, type })}
           >
             {type}
           </button>
-
         ))}
-
       </div>
 
       <Input
         label="Reading"
         placeholder="e.g. 120/80"
         value={vital.value}
-        onChange={e =>
-          setVital({
-            ...vital,
-            value: e.target.value
-          })
-        }
+        onChange={e => setVital({ ...vital, value: e.target.value })}
       />
 
       <Input
         label="Note (optional)"
         placeholder="How are you feeling?"
         value={vital.note}
-        onChange={e =>
-          setVital({
-            ...vital,
-            note: e.target.value
-          })
-        }
+        onChange={e => setVital({ ...vital, note: e.target.value })}
       />
 
-      <Button
-        disabled={!vital.value}
-        onClick={() => {
-          onSave({
-            ...vital,
-            id: Date.now()
-          });
+      {error && <div className="auth-error">{error}</div>}
 
-          alert(
-            "Vital saved locally for this demo."
-          );
-        }}
-      >
-        Save reading
+      <Button disabled={busy || !vital.value.trim()} onClick={saveReading}>
+        {busy ? "Saving…" : "Save reading"}
       </Button>
 
+      <div className="vital-history">
+        <b>Recent readings</b>
+        {readings.length === 0 ? (
+          <p className="muted">No readings saved yet.</p>
+        ) : (
+          readings.slice(0, 10).map(reading => (
+            <div className="vital-row" key={reading.id}>
+              <div>
+                <b>{reading.type}</b> · {reading.value}
+                {reading.note && <span className="muted"> — {reading.note}</span>}
+                <div className="muted small">{formatReadingTime(reading.recordedAt)}</div>
+              </div>
+              <button type="button" onClick={() => deleteReading(reading.id)} aria-label="Delete reading">
+                <X size={15} />
+              </button>
+            </div>
+          ))
+        )}
+      </div>
     </Modal>
   );
 }
@@ -2736,7 +3127,7 @@ function Contacts({
 
               <span className="muted">
                 {contact.relation}
-                {" Â· "}
+                {" · "}
                 {contact.phone}
               </span>
 
@@ -2847,6 +3238,10 @@ function App() {
   const [dataReady, setDataReady] = useState(false);
 
   useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
+  useEffect(() => {
   async function restoreSession() {
     const token = localStorage.getItem("magizh-token");
 
@@ -2865,23 +3260,10 @@ function App() {
         setLanguage(data.profile.language);
       }
 
-      try {
-        const r = await API.request("/api/reminders");
-        setReminders(r.reminders || []);
-      } catch (error) {
-        console.warn("Could not restore reminders:", error);
-        setReminders([]);
-      }
-
-      try {
-        const c = await API.request("/api/contacts");
-        setContacts(c.contacts || []);
-      } catch (error) {
-        console.warn("Could not restore contacts:", error);
-        setContacts([]);
-      }
-
-      setDataReady(true);
+      // Only enable sync when both lists loaded. Otherwise the empty
+      // placeholder would be written back and wipe the saved data.
+      const synced = await loadUserLists();
+      setDataReady(synced);
     } catch (error) {
       console.error("Session restore failed:", error);
 
@@ -2899,10 +3281,7 @@ function App() {
   restoreSession();
 }, []);
 
-  async function authenticated(data) {
-    setAuth(data.user);
-    setProfile(data.profile);
-    if (data.profile?.language) setLanguage(data.profile.language);
+  async function loadUserLists() {
     try {
       const [r, c] = await Promise.all([
         API.request("/api/reminders"),
@@ -2910,8 +3289,18 @@ function App() {
       ]);
       setReminders(r.reminders || []);
       setContacts(c.contacts || []);
-    } catch {}
-    setDataReady(true);
+      return true;
+    } catch (error) {
+      console.warn("Could not load reminders and contacts:", error);
+      return false;
+    }
+  }
+
+  async function authenticated(data) {
+    setAuth(data.user);
+    setProfile(data.profile);
+    if (data.profile?.language) setLanguage(data.profile.language);
+    setDataReady(await loadUserLists());
   }
 
   async function saveProfile(next) {
@@ -2961,7 +3350,7 @@ function App() {
       <div className="auth-shell">
         <div className="auth-loading">
           <img src="/magizh-logo.png" alt="Magizh" />
-          <p>Restoring your secure sessionâ€¦</p>
+          <p>Restoring your secure session…</p>
         </div>
       </div>
     );
@@ -2988,8 +3377,8 @@ function App() {
     );
   }
   if (tab === "learn") page = <Learn />;
-  if (tab === "ai") page = <AIPage profile={profile} />;
-  if (tab === "community") page = <Community profileName={profile.name || "You"} />;
+  if (tab === "ai") page = <AIPage profile={profile} language={language} />;
+  if (tab === "community") page = <Community />;
   if (tab === "profile") {
     page = (
       <Profile
@@ -3031,7 +3420,7 @@ function App() {
         />
       )}
       {modal === "vital" && (
-        <VitalModal onClose={() => setModal(null)} onSave={() => setModal(null)} />
+        <VitalModal onClose={() => setModal(null)} />
       )}
     </div>
   );
@@ -3046,4 +3435,3 @@ createRoot(
 ).render(
   <App />
 );
-
