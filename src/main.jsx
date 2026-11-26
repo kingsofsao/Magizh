@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Activity,
@@ -1380,7 +1380,7 @@ function TrimesterDetail({ trimester, onBack }) {
   );
 }
 
-function Learn() {
+function Learn({ language }) {
   const [selectedTopicId, setSelectedTopicId] = useState(null);
   const [selectedTrimesterId, setSelectedTrimesterId] = useState(null);
   const [selectedSchemeId, setSelectedSchemeId] = useState(null);
@@ -3376,7 +3376,7 @@ function App() {
         goToLearn={() => setTab("learn")} t={text} />
     );
   }
-  if (tab === "learn") page = <Learn />;
+  if (tab === "learn") page = <Learn language={language} />;
   if (tab === "ai") page = <AIPage profile={profile} language={language} />;
   if (tab === "community") page = <Community />;
   if (tab === "profile") {
